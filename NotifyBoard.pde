@@ -21,10 +21,17 @@ This sketch requires the arduino Library from:
  Version 0.4
  */
 
+#include <SPI.h>
+#include <Ethernet.h>
 #include <TimedAction.h>
 #include "MatrixDisplay.h"
 #include "DisplayToolbox.h"
 #include "font.h"
+
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+byte ip[] = { 192, 168, 1, 177 };
+byte gateway[] = { 192, 168, 1, 1 };
+byte subnet[] = { 255, 255, 0, 0 };
 
 void scroll();
 void initText(void);
@@ -61,9 +68,15 @@ char inSerialString[INLENGTH+1];
 int inCount;
 
 TimedAction timedAction = TimedAction(35, scroll);
+Server server(88);
 
 void setup() 
 {
+  // initialize the ethernet device
+  Ethernet.begin(mac, ip, gateway, subnet);
+  // start listening for clients
+  server.begin();
+  
   Serial.begin(9600); 
 
   timedAction.disable();
