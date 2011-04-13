@@ -105,16 +105,17 @@ void setup()
 
 void loop()
 {
+  // wait for a new client:
+  Client client = server.available();
 
-  if (Serial.available() > 0)
+  if (client)
   {
     inCount = 0;
     do 
     {
-      inSerialString[inCount] = Serial.read(); // get it
+      inSerialString[inCount] = client.read(); // get it
       if (inSerialString[inCount] == 10) break;
       if (inCount > INLENGTH) break;
-      //Serial.println(inString[inCount]); 
       if (inSerialString[inCount] > 0 ) inCount++;
     } 
     while (1==1);
