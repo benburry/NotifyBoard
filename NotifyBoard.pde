@@ -29,9 +29,10 @@ This sketch requires the arduino Library from:
 #include "font.h"
 
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-byte ip[] = { 192, 168, 1, 177 };
-byte gateway[] = { 192, 168, 1, 1 };
-byte subnet[] = { 255, 255, 0, 0 };
+byte ip[] = { 192, 168, 101, 250 };
+byte gateway[] = { 192, 168, 100, 1 };
+byte subnet[] = { 255, 255, 254, 0 };
+int PORT = 3333;
 
 void scroll();
 void initText(void);
@@ -68,7 +69,7 @@ char inSerialString[INLENGTH+1];
 int inCount;
 
 TimedAction timedAction = TimedAction(35, scroll);
-Server server(88);
+Server server(PORT);
 
 void setup() 
 {
@@ -78,7 +79,17 @@ void setup()
   server.begin();
   
   Serial.begin(9600); 
-
+  Serial.print("Listening on ");
+  Serial.print(ip[0], DEC);
+  Serial.print(".");
+  Serial.print(ip[1], DEC);
+  Serial.print(".");
+  Serial.print(ip[2], DEC);
+  Serial.print(".");
+  Serial.print(ip[3], DEC);
+  Serial.print(":");
+  Serial.println(PORT, DEC);
+  
   timedAction.disable();
 
   // Fetch bounds
@@ -110,6 +121,7 @@ void loop()
 
   if (client)
   {
+    Serial.println("New data received");
     inCount = 0;
     do 
     {
@@ -204,11 +216,11 @@ void fadeIn(void)
 
 void initText(void)
 {
-  drawString(0,0,"London Hackspace");
+  drawString(0,0,"The Mosh Pit");
   disp.syncDisplays(); 
   fadeIn();
   disp.clear();
-  drawString(0,0,"NotificationBoard 0.4");
+  drawString(0,0,"NotificationBoard 0.1");
   disp.syncDisplays(); 
   fadeIn();
   disp.clear();
